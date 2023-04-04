@@ -130,6 +130,20 @@ A list of the mods could be used for custom plugins:
 - `withXcodeProject`
 - `withPodfileProperties`
 
+It would also be possible to use all of the helpers currently available in `@expo/config-plugins`, like `AndroidConfig.Strings.setStringItem` in the example above.
+
+These changes would possibly also affect libraries development and allow maintainers to use this API within libraries. Based on the [Expo tutorial](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/), we could add support for `app.plugin.js` file for libraries and then declare them under `"plugins"` property in `app.json` the same way Expo is doing that with their libraries:
+```
+"plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ]
+    ]
+```
+
 ![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
 
 ## Drawbacks
