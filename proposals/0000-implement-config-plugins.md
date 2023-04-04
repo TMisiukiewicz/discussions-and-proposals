@@ -21,7 +21,7 @@ The main motivation between this proposal is simplifying the process of upgradin
 
 ## Detailed design
 
-~~This is the bulk of the RFC. Explain the design in enough detail for somebody familiar with React Native to understand, and for somebody familiar with the implementation to implement. This should get into specifics and corner-cases, and include examples of how the feature is used. Any new terminology should be defined here.~~
+![Screenshot 2023-04-04 at 10 58 38](https://user-images.githubusercontent.com/13985840/229742462-810ea565-c3b7-4df5-843e-ba18f56bda32.png)
 
 ## Drawbacks
 
