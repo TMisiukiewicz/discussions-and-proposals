@@ -21,7 +21,7 @@ The main motivation between this proposal is simplifying the process of upgradin
 
 ## Detailed design
 
-![Screenshot 2023-04-04 at 10 58 38](https://user-images.githubusercontent.com/13985840/229742462-810ea565-c3b7-4df5-843e-ba18f56bda32.png)
+![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
 
 ## Drawbacks
 
