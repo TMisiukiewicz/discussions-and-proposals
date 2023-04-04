@@ -31,7 +31,45 @@ Upstreaming it will unlock a few new paths that React Native could follow. First
 - `build-android`
 - `upgrade`
 
-All of them would use newly created method that would apply all the changes defined in `app.json` file. This file determines how a project is loaded. Expo is using it to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs).
+All of them would use newly created method that would apply all the changes defined in `app.json` file. This file determines how a project is loaded. Expo is using it to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). After quick investigation, React Native could support the following properties by default:
+
+### General
+- `name` - The name of the app.
+- `platforms` - Platforms that project supports.
+- `orientation` - Locks the app to a specific orientation with portrait or landscape. Defaults to no lock. Valid values: `default`, `portrait`, `landscape`
+- `androidStatusBar` - Configuration for the status bar on Android.
+- `scheme` - URL scheme to link into the app.
+- `splash` - Configuration for loading and splash screen.
+
+### iOS
+- `bundleIdentifier` - iOS bundle identifier notation unique name for the app.
+- `buildNumber` Build number for your iOS standalone app. Corresponds to `CFBundleVersion`
+ and must match Apple's [specified format](https://developer.apple.com/documentation/bundleresources/information_property_list/cfbundleversion).
+- `icon` Local path or remote URL to an image to use for app's icon on iOS. If specified, this overrides the top-level `icon` key. Use a 1024x1024 icon which follows Apple's interface guidelines for icons, including color profile and transparency.
+- `bitcode` Enable iOS Bitcode optimizations in the native build. Accepts the name of an iOS build configuration to enable for a single configuration and disable for all others, e.g. Debug, Release.
+- `supportsTablet` Whether standalone iOS app supports tablet screen sizes. Defaults to `false`
+- `isTabletOnly` If true, indicates that iOS app does not support handsets, and only supports tablets.
+- `userInterfaceStyle` - Configuration to force the app to always use the light or dark user-interface appearance, such as "dark mode", or make it automatically adapt to the system preferences. If not provided, defaults to `light`
+- `infoPlist` - Dictionary of arbitrary configuration to add to app's native Info.plist.
+- `entitlements` Dictionary of arbitrary configuration to add to app's native *.entitlements (plist).
+- `associatedDomains` An array that contains Associated Domains for the app.
+- `accessesContactNotes` - A Boolean value that indicates whether the app may access the notes stored in contacts. [Receiving a permission from Apple](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes) is required before submitting an app for review with this capability.
+- `splash` Configuration for loading and splash screen for iOS apps.
+- `runtimeVersion` The runtime version associated with this manifest for the iOS platform. If provided, this will override the top level runtimeVersion key.
+
+### Android
+- `package` The package name for Android app. It needs to be unique on the Play Store
+- `versionCode` Version number required by Google Play. Must be a positive integer.
+- `backgroundColor` The background color for Android app, behind any of React views. Overrides the top-level `backgroundColor` key if it is present.
+- `icon` Local path or remote URL to an image to use for app's icon on Android. If specified, this overrides the top-level `icon` key. 1024x1024 png file is recommended (transparency is recommended for the Google Play Store). This icon will appear on the home screen.
+- `adaptiveIcon` Settings for an Adaptive Launcher Icon on Android
+- `permissions` List of permissions used by the app.
+- `blockedPermissions` List of permissions to block in the final `AndroidManifest.xml`.
+- `splash` Configuration for loading and splash screen for Android apps.
+- `intentFilters` Configuration for setting an array of custom intent filters in Android manifest.
+- `allowBackup` Allows user's app data to be automatically backed up to their Google Drive. If this is set to false, no backup or restore of the application will ever be performed (this is useful if your app deals with sensitive information). Defaults to the Android default, which is `true`
+- `softwareKeyboardLayoutMode` Determines how the software keyboard will impact the layout of the application. This maps to the `android:windowSoftInputMode` property. Defaults to `resize`. Valid values: `resize`, `pan`
+- `runtimeVersion` The runtime version associated with this manifest for the Android platform. If provided, this will override the top level runtimeVersion key.
 
 ![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
 
