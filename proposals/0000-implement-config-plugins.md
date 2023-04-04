@@ -186,3 +186,5 @@ This approach would also make it possible to extend config plugins with other pl
 ## Unresolved questions
 - How it would affect autolinking of the libraries?
 - How to correctly handle `pod install`?
+- What changes have to be done to point the correct path for temporary directory without exposing this information for developers?
+- Would it be possible for library maintainers to [create a native module using config plugins](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/) without Expo Modules in the project?
