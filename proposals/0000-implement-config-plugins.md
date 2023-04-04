@@ -21,6 +21,8 @@ The main motivation between this proposal is simplifying the process of upgradin
 
 ## Detailed design
 
+![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
+
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. Expo would be still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
 Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. We can move away from being dependent on `/android` and `ios` directories, and instead of it, create temporary directory with both of these folders generated in the runtime. Native templates could be moved into separate directory in React Native core and copied into temporary directory (if it  does not exist yet) when running one of the commands:
@@ -33,7 +35,7 @@ Upstreaming it will unlock a few new paths that React Native could follow. First
 
 All of them would use newly created method that would apply all the changes defined in `app.json` file. This file determines how a project is loaded. Expo is using it to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). After quick investigation, React Native could support the following properties by default:
 
-### General
+#### General
 - `name` - The name of the app.
 - `platforms` - Platforms that project supports.
 - `orientation` - Locks the app to a specific orientation with portrait or landscape. Defaults to no lock. Valid values: `default`, `portrait`, `landscape`
@@ -41,7 +43,7 @@ All of them would use newly created method that would apply all the changes defi
 - `scheme` - URL scheme to link into the app.
 - `splash` - Configuration for loading and splash screen.
 
-### iOS
+#### iOS
 - `bundleIdentifier` - iOS bundle identifier notation unique name for the app.
 - `buildNumber` Build number for your iOS standalone app. Corresponds to `CFBundleVersion`
  and must match Apple's [specified format](https://developer.apple.com/documentation/bundleresources/information_property_list/cfbundleversion).
@@ -57,7 +59,7 @@ All of them would use newly created method that would apply all the changes defi
 - `splash` Configuration for loading and splash screen for iOS apps.
 - `runtimeVersion` The runtime version associated with this manifest for the iOS platform. If provided, this will override the top level runtimeVersion key.
 
-### Android
+#### Android
 - `package` The package name for Android app. It needs to be unique on the Play Store
 - `versionCode` Version number required by Google Play. Must be a positive integer.
 - `backgroundColor` The background color for Android app, behind any of React views. Overrides the top-level `backgroundColor` key if it is present.
@@ -109,7 +111,7 @@ app.json
 
 A list of the mods could be used for custom plugins:
 
-### Android
+#### Android
 - `withAndroidManifest`
 - `withStringsXml`
 - `withAndroidColors`
@@ -122,7 +124,7 @@ A list of the mods could be used for custom plugins:
 - `withSettingsGradle`
 - `withGradleProperties`
 
-### iOS
+#### iOS
 - `withAppDelegate`
 - `withInfoPlist`
 - `withEntitlementsPlist`
@@ -144,7 +146,14 @@ These changes would possibly also affect libraries development and allow maintai
     ]
 ```
 
-![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
+### `prebuild` command
+Additionally, React Native CLI would have a new command, similar to the one known from Expo CLI, called `prebuild`. It would create a fresh copies of native templates in the root directory to make it possible to add some native changes directly in the native files. Prebuild would run all config plugins to apply all of the necessary changes. There should also be a possibility of using `--clean` flag with prebuild to install fresh copy of native directories and apply all config plugins. It is very risky to use it once the project is prebuilt due to possibility of losing the changes made manually in native directories. Until native directories are in the temporary folder, running `--clean` should not affect it in a negative way.
+
+### Improved updates
+With this solution it seems like upgrading React Native would become much easier. Each time React Native gets upgraded, we can just generate new temporary directories with iOS and Android templates and apply all the changes using config plugins.
+
+### Support for other platforms
+This approach would also make it possible to extend config plugins with other platforms, e.g. `react-native-windows`. Following the same pattern, a support for `windows` and `macos` properties could be added to `app.json` together with some custom mods for native files.
 
 ## Drawbacks
 
@@ -175,5 +184,5 @@ These changes would possibly also affect libraries development and allow maintai
 ~~How should this feature be taught to existing React Native developers?~~
 
 ## Unresolved questions
-
-~~Optional, but suggested for first drafts. What parts of the design are still TBD?~~
+- How it would affect autolinking of the libraries?
+- How to correctly handle `pod install`?
