@@ -13,8 +13,26 @@ Implementing Expo Config Plugins into React Native CLI to support modifying appl
 
 ## Basic example
 
-~~If the proposal involves a new or changed API, include a basic code example. Omit this section if it's not applicable.~~
+https://user-images.githubusercontent.com/13985840/229797752-81009e28-3153-4702-b52f-14602789a87b.mov
 
+In this example, when running `start` command, Android permissions defined in `app.json` are added to `AndroidManifest.xml` file, and a new key is added into `Info.plist` file based on a custom plugin:
+
+```js
+module.exports = function (config, { apiKey }) {
+    // Ensure the objects exist
+    if (!config.ios) {
+      config.ios = {};
+    }
+    if (!config.ios.infoPlist) {
+      config.ios.infoPlist = {};
+    }
+  
+    // Append the apiKey
+    config.ios.infoPlist['MY_CUSTOM_NATIVE_IOS_API_KEY'] = apiKey;
+  
+    return config;
+  };
+```
 ## Motivation
 
 The main motivation between this proposal is simplifying the process of upgrading apps to the newest React Native version. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g while running `react-native upgrade` - without having Expo in the project. On top of that, it would become possible to build config plugins for Windows and Mac.
