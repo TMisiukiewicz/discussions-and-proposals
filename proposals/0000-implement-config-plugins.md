@@ -71,6 +71,65 @@ All of them would use newly created method that would apply all the changes defi
 - `softwareKeyboardLayoutMode` Determines how the software keyboard will impact the layout of the application. This maps to the `android:windowSoftInputMode` property. Defaults to `resize`. Valid values: `resize`, `pan`
 - `runtimeVersion` The runtime version associated with this manifest for the Android platform. If provided, this will override the top level runtimeVersion key.
 
+The CLI would look for any changes in the `app.json` file and regenerate the temporary folders if changes are applied.
+
+Additionally, it would become possible to create custom plugins within the app. Since the plugins would be available to import directly from `react-native`, it would not need any additional setup on the developer side. E.g. developer can easily create a custom plugin:
+
+```js
+./plugins/withStringsXml.js
+
+
+const { AndroidConfig, withStringsXml } = require('react-native')
+
+module.exports = function (config) {
+    return withStringsXml(config, (conf) => {
+      conf.modResults = AndroidConfig.Strings.setStringItem(
+        [
+          {
+            _: 'true',
+            $: {
+              name: 'test_value',
+              translatable: 'false'
+            }
+          }
+        ],
+        conf.modResults
+      )
+      return conf
+    })
+}
+```
+
+```js
+app.json
+
+
+"plugins": ["./plugins/withStringsXml.js"],
+```
+
+A list of the mods could be used for custom plugins:
+
+### Android
+- `withAndroidManifest`
+- `withStringsXml`
+- `withAndroidColors`
+- `withAndroidColorsNight`
+- `withAndroidStyles`
+- `withMainActivity`
+- `withMainApplication`
+- `withProjectBuildGradle`
+- `withAppBuildGradle`
+- `withSettingsGradle`
+- `withGradleProperties`
+
+### iOS
+- `withAppDelegate`
+- `withInfoPlist`
+- `withEntitlementsPlist`
+- `withExpoPlist`
+- `withXcodeProject`
+- `withPodfileProperties`
+
 ![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
 
 ## Drawbacks
