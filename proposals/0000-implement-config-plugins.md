@@ -21,6 +21,18 @@ The main motivation between this proposal is simplifying the process of upgradin
 
 ## Detailed design
 
+The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. Expo would be still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
+
+Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. We can move away from being dependent on `/android` and `ios` directories, and instead of it, create temporary directory with both of these folders generated in the runtime. Native templates could be moved into separate directory in React Native core and copied into temporary directory (if it  does not exist yet) when running one of the commands:
+- `start`
+- `run-ios`
+- `run-android`
+- `build-ios`
+- `build-android`
+- `upgrade`
+
+All of them would use newly created method that would apply all the changes defined in `app.json` file. This file determines how a project is loaded. Expo is using it to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs).
+
 ![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
 
 ## Drawbacks
