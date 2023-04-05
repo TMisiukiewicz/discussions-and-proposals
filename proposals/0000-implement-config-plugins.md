@@ -51,7 +51,7 @@ Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set
 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. Expo would be still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
-Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. We can move away from being dependent on `/android` and `ios` directories, and instead of it, create temporary directory with both of these folders generated in the runtime. Native templates could be moved into separate directory in React Native core and copied into temporary directory (if it  does not exist yet) when running one of the commands:
+Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. It would become possible to add platform-specific folders like `android` and `ios` to `.gitignore` and keep them out of the repository unless it's needed (e.g. when it's not possible to do some native-side changes with using config plugins). These folders would be automatically (re)generated when running one of the following commands:
 - `start`
 - `run-ios`
 - `run-android`
@@ -59,15 +59,41 @@ Upstreaming it will unlock a few new paths that React Native could follow. First
 - `build-android`
 - `upgrade`
 
-All of them would use newly created method that would apply all the changes defined in `app.json` file. This file determines how a project is loaded. Expo is using it to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). After quick investigation, React Native could support the following properties by default:
+All of them would use newly created method that would apply all the changes defined in `app.json` file. Expo is using this file to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). It will also become an opportunity to create configurations for Out-of-Tree Platforms. Here's the list of Expo Config properties, divided by those that React Native could possibly handle out of the box, and the Expo-specific ones: 
 
 #### General
+##### Possible to adopt by RN
 - `name` - The name of the app.
 - `platforms` - Platforms that project supports.
 - `orientation` - Locks the app to a specific orientation with portrait or landscape. Defaults to no lock. Valid values: `default`, `portrait`, `landscape`
-- `androidStatusBar` - Configuration for the status bar on Android.
 - `scheme` - URL scheme to link into the app.
 - `splash` - Configuration for loading and splash screen.
+- `primaryColor` - determines the color of the app in the multitasker.
+- `icon` - local path or remote url to use for app's icon
+- `notification` - configure for remote push notifications
+- `locales` - overrides by locale for System Dialog prompts like permission boxes
+- `plugins` - config plugins for adding extra functionality to the project
+##### Expo-specific
+- `slug` - friendly URL name for publishing
+- `owner` - name of the Expo account that owns the project
+- `currentFullName` - auto generated Expo account name and slug used for display purposes
+- `originalFullName` - auto generated Expo account name and slug used for services like Notifications and AuthSession proxy
+- `privacy` - project page access restrictions
+- `sdkVersion`- Expo sdkVersion to run the project on.
+- `githubUrl` - linking GH project with Expo project page
+- `userInterfaceStyle` - forces app to always use the light/dark/automatic mode. Requires `expo-system-ui` to be installed
+- `backgroundColor` - background color for the app, behind all React views. Requires `expo-system-ui` to be installed
+- `androidStatusBar` - configuration of status bar on Android, requires `expo-status-bar`
+- `androidNavigationBar` - config for bottom navigator bar. Requires `expo-navigation-bar`
+- `developmentClient` - settings specific to running app in dev client
+- `extra` - extra fields to pass, accessible via `Expo.Constants.manifest.extra`
+- `updates` - configuration for how and when the app should request OTA updates
+- `isDetached` - is app detached
+- `detach` - extra fields needed by detached apps
+- `assetBundlePatterns` - array of file glob strings which point to assets bundled within app binary
+- `jsEngine` - specifies the JS engine for apps, supported only on EAS Build
+- `hooks` - configuration for scripts to run to hook into the publish process
+- `experiments` - experimental features related to Expo SDK
 
 #### iOS
 - `bundleIdentifier` - iOS bundle identifier notation unique name for the app.
