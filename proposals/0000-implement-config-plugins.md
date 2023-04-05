@@ -39,7 +39,8 @@ The main motivation between this proposal is simplifying the process of upgradin
 
 ## Detailed design
 
-![Screenshot 2023-04-04 at 11 06 48](https://user-images.githubusercontent.com/13985840/229743911-38cc52e3-877e-4f01-a912-c78af608f1ac.png)
+![Screenshot 2023-04-05 at 09 55 53](https://user-images.githubusercontent.com/13985840/230018022-ab2d44de-2435-410c-86e8-8d5acbc8b163.png)
+
 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. Expo would be still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
