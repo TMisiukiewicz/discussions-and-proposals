@@ -67,10 +67,8 @@ All of them would use newly created method that would apply all the changes defi
 - `platforms` - Platforms that project supports.
 - `orientation` - Locks the app to a specific orientation with portrait or landscape. Defaults to no lock. Valid values: `default`, `portrait`, `landscape`
 - `scheme` - URL scheme to link into the app.
-- `splash` - Configuration for loading and splash screen.
 - `primaryColor` - determines the color of the app in the multitasker.
 - `icon` - local path or remote url to use for app's icon
-- `notification` - configure for remote push notifications
 - `locales` - overrides by locale for System Dialog prompts like permission boxes
 - `plugins` - config plugins for adding extra functionality to the project
 ##### Expo-specific
@@ -80,6 +78,7 @@ All of them would use newly created method that would apply all the changes defi
 - `originalFullName` - auto generated Expo account name and slug used for services like Notifications and AuthSession proxy
 - `privacy` - project page access restrictions
 - `sdkVersion`- Expo sdkVersion to run the project on.
+- `splash` - Configuration for loading and splash screen.
 - `githubUrl` - linking GH project with Expo project page
 - `userInterfaceStyle` - forces app to always use the light/dark/automatic mode. Requires `expo-system-ui` to be installed
 - `backgroundColor` - background color for the app, behind all React views. Requires `expo-system-ui` to be installed
@@ -91,6 +90,7 @@ All of them would use newly created method that would apply all the changes defi
 - `isDetached` - is app detached
 - `detach` - extra fields needed by detached apps
 - `assetBundlePatterns` - array of file glob strings which point to assets bundled within app binary
+- `notification` - configure for remote push notifications
 - `jsEngine` - specifies the JS engine for apps, supported only on EAS Build
 - `hooks` - configuration for scripts to run to hook into the publish process
 - `experiments` - experimental features related to Expo SDK
@@ -109,20 +109,20 @@ All of them would use newly created method that would apply all the changes defi
 - `entitlements` - Dictionary of arbitrary configuration to add to app's native *.entitlements (plist).
 - `associatedDomains` - An array that contains Associated Domains for the app.
 - `accessesContactNotes` - A Boolean value that indicates whether the app may access the notes stored in contacts. [Receiving a permission from Apple](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes) is required before submitting an app for review with this capability.
-- `splash` - Configuration for loading and splash screen for iOS apps.
 - `runtimeVersion` - The runtime version associated with this manifest for the iOS platform. If provided, this will override the top level runtimeVersion key.
-- `config` - config for e.g. Google Maps API, Mobile Ads API etc
 - `googleServicesFile` - location of GoogleService-Info.plist` file for configuring Firebase
 - `requireFullScreen` - indicates that iOS app does not support Slide Over and Split View on iPad
 
 ##### Expo-specific
 - `publishManifestPath` - manifest for the iOS version written to this path during publish
 - `publishBundlePath` - bundle for the iOS version written to this path during publish
+- `splash` - Configuration for loading and splash screen for iOS apps.
 - `backgroundColor` -  background color for the app, behind all React views. Requires `expo-system-ui` to be installed
 - `appStoreUrl` - link to your store page from your Expo project page if app is public
 - `usesIcloudStorage` - indicating if the app uses iCloud Storage for Expo's DocumentPicker
 - `usesAppleSignIn` - indicating if the app uses Apple Sign-In with Expo's Apple Authentication
 - `jsEngine` - Specifies the JavaScript engine for iOS apps. Supported only on EAS Build
+- `config` - config for e.g. Google Maps API, Mobile Ads API etc
 
 #### Android
 ##### Possible to adopt by RN
@@ -133,30 +133,28 @@ All of them would use newly created method that would apply all the changes defi
 - `adaptiveIcon` Settings for an Adaptive Launcher Icon on Android
 - `permissions` List of permissions used by the app.
 - `blockedPermissions` List of permissions to block in the final `AndroidManifest.xml`.
-- `splash` Configuration for loading and splash screen for Android apps.
 - `intentFilters` Configuration for setting an array of custom intent filters in Android manifest.
 - `allowBackup` Allows user's app data to be automatically backed up to their Google Drive. If this is set to false, no backup or restore of the application will ever be performed (this is useful if your app deals with sensitive information). Defaults to the Android default, which is `true`
 - `softwareKeyboardLayoutMode` Determines how the software keyboard will impact the layout of the application. This maps to the `android:windowSoftInputMode` property. Defaults to `resize`. Valid values: `resize`, `pan`
 - `runtimeVersion` The runtime version associated with this manifest for the Android platform. If provided, this will override the top level runtimeVersion key.
 - `googleServicesFile` - Location of the `GoogleService-Info.plist` file for configuring Firebase. Including this key automatically enables FCM in the app.
-- `config` - config for e.g. Google Maps API, Mobile Ads API etc
 
 ##### Expo-specific
 - `publishManifestPath` - manifest for the iOS version written to this path during publish
 - `publishBundlePath` - bundle for the iOS version written to this path during publish
+- `splash` Configuration for loading and splash screen for Android apps.
 - `userInterfaceStyle` - forces app to always use the light/dark/automatic mode. Requires `expo-system-ui` to be installed
 - `playStoreUrl` - URL to your app on the Google Play Store, used to link Expo project with store page
 - `jsEngine` - Specifies the JavaScript engine for iOS apps. Supported only on EAS Build
+- `config` - config for e.g. Google Maps API, Mobile Ads API etc
 
 The CLI would look for any changes in the `app.json` file and regenerate the platform-specific folders when running one of the React Native commands.
 
-Additionally, it would become possible to create custom plugins within the app. Since the plugins would be available to import directly from `react-native`, it would not need any additional setup on the developer side. E.g. developer can easily create a custom plugin:
+Additionally, it would become possible to create custom plugins within the app. Since the plugins would be available to import directly from the core, it would not need any additional setup on the developer side. E.g. developer can easily create a custom plugin:
 
+`./plugins/withStringsXml.js`:
 ```js
-./plugins/withStringsXml.js
-
-
-const { AndroidConfig, withStringsXml } = require('react-native')
+const { AndroidConfig, withStringsXml } = require('@react-native/config-plugins')
 
 module.exports = function (config) {
     return withStringsXml(config, (conf) => {
@@ -176,15 +174,15 @@ module.exports = function (config) {
     })
 }
 ```
-
-```js
-app.json
-
-
-"plugins": ["./plugins/withStringsXml.js"],
+`app.json`:
+```diff
+{
+  "name": "MyTestApp",
+  "displayName": "MyTestApp",
++  "plugins": ["./plugins/withNewString.js"]
+}
 ```
-
-A list of the mods could be used for custom plugins:
+In the example above, custom plugin is using `withStringsXml` mod. Mods are async functions that modify native files. A list of the mods available for custom plugins:
 
 #### Android
 - `withAndroidManifest`
@@ -209,6 +207,13 @@ A list of the mods could be used for custom plugins:
 
 It would also be possible to use all of the helpers currently available in `@expo/config-plugins`, like `AndroidConfig.Strings.setStringItem` in the example above.
 
+The mods can be also are appended to the mods object of the configuration. This section varies from the other parts of the configuration as it is not serialized after the initial reading. It's possible to utilize it to execute operations while generating code. In general, creating custom plugins with mod functions are simpler to work with, so it's recommended to use it instead of using `mods` object in `app.json`.
+
+### `prebuild` command
+Additionally, React Native CLI would have a couple of new commands, similar to `prebuild` known from Expo CLI. The method applying config plugins into native code would run with the commands mentioned above, but, `prebuild` command would additionally add the native files into repository to make sure developers can safely make any manual changes in native folders. If there is a need of prebuilding only one of the platforms, it would be possible to use `prebuild-android` and `prebuild-ios` commands. Prebuild would run all config plugins to apply all of the necessary changes. There should also be a possibility of using `--clean` flag with prebuild to install fresh copy of native directories and apply all config plugins. It should be used only if there are no manual changes made to native files.
+
+### Library development
+
 These changes would possibly also affect libraries development and allow maintainers to use this API within libraries. Based on the [Expo tutorial](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/), we could add support for `app.plugin.js` file for libraries and then declare them under `"plugins"` property in `app.json` the same way Expo is doing that with their libraries:
 ```
 "plugins": [
@@ -221,11 +226,8 @@ These changes would possibly also affect libraries development and allow maintai
     ]
 ```
 
-### `prebuild` command
-Additionally, React Native CLI would have a new command, similar to the one known from Expo CLI, called `prebuild`. It would create a fresh copies of native templates in the root directory to make it possible to add some native changes directly in the native files. Prebuild would run all config plugins to apply all of the necessary changes. There should also be a possibility of using `--clean` flag with prebuild to install fresh copy of native directories and apply all config plugins. It is very risky to use it once the project is prebuilt due to possibility of losing the changes made manually in native directories. Until native directories are in the temporary folder, running `--clean` should not affect it in a negative way.
-
 ### Improved updates
-With this solution it seems like upgrading React Native would become much easier. Each time React Native gets upgraded, we can just generate new temporary directories with iOS and Android templates and apply all the changes using config plugins.
+With this solution it seems like upgrading React Native would become much easier. Each time React Native gets upgraded, we can just copy-paste fresh iOS and Android templates from RN core and apply all the changes using config plugins. We could track if any manual changes were made in the native folders, and if yes, warn user about it and allow to upgrade only in an old way.
 
 ### Support for other platforms
 This approach would also make it possible to extend config plugins with other platforms, e.g. `react-native-windows`. Following the same pattern, a support for `windows` and `macos` properties could be added to `app.json` together with some custom mods for native files.
