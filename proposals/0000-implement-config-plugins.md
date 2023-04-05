@@ -1,11 +1,11 @@
 ---
-title: Support Expo Config Plugins in React Native CLI
+title: Support Expo Config Plugins in React Native apps
 author:
 - Tomasz Misiukiewicz
 date: today
 ---
 
-# RFC0000: Support Expo Config Plugins in React Native CLI
+# RFC0000: Support Expo Config Plugins in React Native apps
 
 ## Summary
 
