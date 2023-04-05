@@ -34,20 +34,15 @@ module.exports = function (config, { apiKey }) {
   };
 ```
 ## Motivation
-
-The main motivation between this proposal is simplifying the process of upgrading apps to the newest React Native version. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g while running `react-native upgrade` - without having Expo in the project. 
-On top of that, it will unlock new possibilities to create config plugins for Out-of-Tree platforms, like Windows and MacOS.
-
-## Detailed design
-
-![Screenshot 2023-04-05 at 11 01 31](https://user-images.githubusercontent.com/13985840/230034001-4e40b04a-f474-47a9-98f7-15fdfa1bf7e8.png)
-
-### What are config plugins?
 According to the [Expo docs](https://docs.expo.dev/guides/config-plugins/), config plugins are a system for extending Expo config and customizing the prebuild phase of managed builds. Expo CLI is using it internally to generate and configure all the native code for managed projects.
 
 Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set of configuration options for React Native app, providing a standarized way of generating and configuring native code on all platforms.
 
-### How would it work?
+The main motivation between this proposal is to create a standarized way of generating and configuring native side of React Native projects across all platforms, including Out-of-Tree platforms. Currently using config plugins is available only to projects based on Expo. It is very powerful, but it's limited only to Android and iOS. With moving parts of it into the core of React Native, we would unlock a possibility of creating config plugins for Out-of-Tree platforms, like Windows and MacOS, in a standarized way. Additionally, we would make the process of upgrading apps to the newest React Native version much simplier than it works now. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g while running `react-native upgrade` - without having Expo in the project. 
+
+## Detailed design
+
+![Screenshot 2023-04-05 at 11 01 31](https://user-images.githubusercontent.com/13985840/230034001-4e40b04a-f474-47a9-98f7-15fdfa1bf7e8.png)
 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'll handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
