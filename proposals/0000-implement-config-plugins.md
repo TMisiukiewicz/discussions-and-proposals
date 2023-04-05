@@ -229,6 +229,8 @@ These changes would possibly also affect libraries development and allow maintai
 }
 ```
 
+If config plugins become a standard, we could provide support for it in [@callstack/react-native-builder-bob](https://github.com/callstack/react-native-builder-bob).
+
 ### Improved updates
 With this solution it seems like upgrading React Native would become much easier. Each time React Native gets upgraded, we can just copy-paste fresh iOS and Android templates from RN core and apply all the changes using config plugins. We could track if any manual changes were made in the native folders, and if yes, warn user about it and allow to upgrade only in an old way.
 
