@@ -44,7 +44,7 @@ The main motivation between this proposal is to create a standarized way of gene
 
 ![Screenshot 2023-04-05 at 11 01 31](https://user-images.githubusercontent.com/13985840/230034001-4e40b04a-f474-47a9-98f7-15fdfa1bf7e8.png)
 
-The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'll handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
+The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core as a separate package in monorepo. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'd handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
 Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. It would become possible to add platform-specific folders like `android` and `ios` to `.gitignore` by default and keep them out of the repository unless it's needed (e.g. when it's not possible to do some native-side changes with using config plugins). These folders would be automatically (re)generated when running one of the following commands:
 - `start`
@@ -54,7 +54,11 @@ Upstreaming it will unlock a few new paths that React Native could follow. First
 - `build-android`
 - `upgrade`
 
-All of them would use newly created method that would apply all the changes defined in `app.json` file. Expo is using this file to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). It will also become an opportunity to create configurations for Out-of-Tree Platforms. Here's the list of Expo Config properties, divided by those that React Native could possibly handle out of the box, and the Expo-specific ones: 
+This would require having `@react-native/config-plugins` as a dependency of `react-native-cli`. If it's possible in the future, we could move platform-specific code from CLI into the core to avoid that. It might be related to the [Move iOS and Android Specific Code to Their Own Packages](https://github.com/react-native-community/discussions-and-proposals/pull/49/files) RFC.
+
+All of the commands would use newly created method that would apply all the changes defined in `app.json` file. Expo is using this file to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). It will also become an opportunity to create configurations for Out-of-Tree Platforms. 
+
+Here's the list of Expo Config properties, divided by those that React Native could possibly handle out of the box, and the Expo-specific ones: 
 
 #### General
 ##### Possible to adopt by RN
@@ -210,15 +214,19 @@ Additionally, React Native CLI would have a couple of new commands, similar to `
 ### Library development
 
 These changes would possibly also affect libraries development and allow maintainers to use this API within libraries. Based on the [Expo tutorial](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/), we could add support for `app.plugin.js` file for libraries and then declare them under `"plugins"` property in `app.json` the same way Expo is doing that with their libraries:
-```
-"plugins": [
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
-        }
-      ]
-    ]
+```diff
+{
+    "name": "MyTestApp",
+    "displayName": "MyTestApp",
++    "plugins": [
++          [
++            "expo-camera",
++            {
++              "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
++            }
++          ]
++        ]
+}
 ```
 
 ### Improved updates
@@ -229,34 +237,23 @@ This approach would also make it possible to extend config plugins with other pl
 
 ## Drawbacks
 
-~~Why should we _not_ do this? Please consider:~~
-
-- ~~implementation cost, both in term of code size and complexity~~
-- ~~whether the proposed feature can be implemented in user space~~
-- ~~the impact on teaching people React Native~~
-- ~~integration of this feature with other existing and planned features~~
-- ~~cost of migrating existing React Native applications (is it a breaking change?)~~
-
-~~There are tradeoffs to choosing any path. Attempt to identify them here.~~
+- some of the mods are operating on regexes, which makes them dangerous to use
 
 ## Alternatives
 
-~~What other designs have been considered? Why did you select your approach?~~
+- moving native folders to temporary directory instead of having it in the project root - it would cause a lot of issues regarding native folders paths
+- creating separate package with native folders to modify it directly in node_modules - same as above, additionally it could generate some yarn/npm-specific issues
 
 ## Adoption strategy
 
-~~If we implement this proposal, how will existing React Native developers adopt it? Is this a breaking change? Can we write a codemod? Should we coordinate with other projects or libraries?~~
+In a close cooperation with Expo, we should start with upstreaming config plugins into RN core in a way that would help them easily adjust their tools. Once it's done, changes should be applied into `react-native-cli` to support config plugins. Once both React Native and CLI are released, libraries maintainers will get the possibility of adding support for config plugins into their libraries. Additionally [`callstack/react-native-builder-bob`](https://github.com/callstack/react-native-builder-bob) would have to start supporting it to create libraries with new API.
 
 ## How we teach this
 
-~~What names and terminology work best for these concepts and why? How is this idea best presented? As a continuation of existing React patterns?~~
-
-~~Would the acceptance of this proposal mean the React Native documentation must be re-organized or altered? Does it change how React Native is taught to new developers at any level?~~
-
-~~How should this feature be taught to existing React Native developers?~~
+React Native docs should be updated, describing well the new approach, Expo documentation would be very helpful here. Post on React Native blog with explanation and some examples how it works and what benefits developers get from that. Conferences talks, e.g. on React Native EU, to reach as large audience as possible.
+From entry level developers perspective, using `app.json` file to handle configuration should be very easy. Creating custom plugins and using mods is a bit more difficult, but in general should be done by developers only when needed. Possibly the biggest audience here are library maintainers, with good understanding of the concept they will be able to adopt it into the libraries. Developers creating apps probably wouldn't have to worry about config plugins unless they need to create one.
 
 ## Unresolved questions
-- How it would affect autolinking of the libraries?
-- How to correctly handle `pod install`?
-- What changes have to be done to point the correct path for temporary directory without exposing this information for developers?
 - Would it be possible for library maintainers to [create a native module using config plugins](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/) without Expo Modules in the project?
+- Would libraries currently supporting Expo work out of the box with the new approach?
+- Is there a possibility to support Expo modules e.g. `expo-camera` in the future?
