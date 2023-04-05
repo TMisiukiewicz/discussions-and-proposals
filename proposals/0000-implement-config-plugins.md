@@ -49,9 +49,9 @@ Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set
 
 ### How would it work?
 
-The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. Expo would be still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
+The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'll handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
-Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. It would become possible to add platform-specific folders like `android` and `ios` to `.gitignore` and keep them out of the repository unless it's needed (e.g. when it's not possible to do some native-side changes with using config plugins). These folders would be automatically (re)generated when running one of the following commands:
+Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. It would become possible to add platform-specific folders like `android` and `ios` to `.gitignore` by default and keep them out of the repository unless it's needed (e.g. when it's not possible to do some native-side changes with using config plugins). These folders would be automatically (re)generated when running one of the following commands:
 - `start`
 - `run-ios`
 - `run-android`
@@ -96,22 +96,36 @@ All of them would use newly created method that would apply all the changes defi
 - `experiments` - experimental features related to Expo SDK
 
 #### iOS
+##### Possible to adopt by RN
 - `bundleIdentifier` - iOS bundle identifier notation unique name for the app.
-- `buildNumber` Build number for your iOS standalone app. Corresponds to `CFBundleVersion`
+- `buildNumber` - Build number for your iOS standalone app. Corresponds to `CFBundleVersion`
  and must match Apple's [specified format](https://developer.apple.com/documentation/bundleresources/information_property_list/cfbundleversion).
-- `icon` Local path or remote URL to an image to use for app's icon on iOS. If specified, this overrides the top-level `icon` key. Use a 1024x1024 icon which follows Apple's interface guidelines for icons, including color profile and transparency.
-- `bitcode` Enable iOS Bitcode optimizations in the native build. Accepts the name of an iOS build configuration to enable for a single configuration and disable for all others, e.g. Debug, Release.
-- `supportsTablet` Whether standalone iOS app supports tablet screen sizes. Defaults to `false`
-- `isTabletOnly` If true, indicates that iOS app does not support handsets, and only supports tablets.
+- `icon` - Local path or remote URL to an image to use for app's icon on iOS. If specified, this overrides the top-level `icon` key. Use a 1024x1024 icon which follows Apple's interface guidelines for icons, including color profile and transparency.
+- `bitcode` - Enable iOS Bitcode optimizations in the native build. Accepts the name of an iOS build configuration to enable for a single configuration and disable for all others, e.g. Debug, Release.
+- `supportsTablet` - Whether standalone iOS app supports tablet screen sizes. Defaults to `false`
+- `isTabletOnly` - If true, indicates that iOS app does not support handsets, and only supports tablets.
 - `userInterfaceStyle` - Configuration to force the app to always use the light or dark user-interface appearance, such as "dark mode", or make it automatically adapt to the system preferences. If not provided, defaults to `light`
 - `infoPlist` - Dictionary of arbitrary configuration to add to app's native Info.plist.
-- `entitlements` Dictionary of arbitrary configuration to add to app's native *.entitlements (plist).
-- `associatedDomains` An array that contains Associated Domains for the app.
+- `entitlements` - Dictionary of arbitrary configuration to add to app's native *.entitlements (plist).
+- `associatedDomains` - An array that contains Associated Domains for the app.
 - `accessesContactNotes` - A Boolean value that indicates whether the app may access the notes stored in contacts. [Receiving a permission from Apple](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_contacts_notes) is required before submitting an app for review with this capability.
-- `splash` Configuration for loading and splash screen for iOS apps.
-- `runtimeVersion` The runtime version associated with this manifest for the iOS platform. If provided, this will override the top level runtimeVersion key.
+- `splash` - Configuration for loading and splash screen for iOS apps.
+- `runtimeVersion` - The runtime version associated with this manifest for the iOS platform. If provided, this will override the top level runtimeVersion key.
+- `config` - config for e.g. Google Maps API, Mobile Ads API etc
+- `googleServicesFile` - location of GoogleService-Info.plist` file for configuring Firebase
+- `requireFullScreen` - indicates that iOS app does not support Slide Over and Split View on iPad
+
+##### Expo-specific
+- `publishManifestPath` - manifest for the iOS version written to this path during publish
+- `publishBundlePath` - bundle for the iOS version written to this path during publish
+- `backgroundColor` -  background color for the app, behind all React views. Requires `expo-system-ui` to be installed
+- `appStoreUrl` - link to your store page from your Expo project page if app is public
+- `usesIcloudStorage` - indicating if the app uses iCloud Storage for Expo's DocumentPicker
+- `usesAppleSignIn` - indicating if the app uses Apple Sign-In with Expo's Apple Authentication
+- `jsEngine` - Specifies the JavaScript engine for iOS apps. Supported only on EAS Build
 
 #### Android
+##### Possible to adopt by RN
 - `package` The package name for Android app. It needs to be unique on the Play Store
 - `versionCode` Version number required by Google Play. Must be a positive integer.
 - `backgroundColor` The background color for Android app, behind any of React views. Overrides the top-level `backgroundColor` key if it is present.
@@ -124,8 +138,17 @@ All of them would use newly created method that would apply all the changes defi
 - `allowBackup` Allows user's app data to be automatically backed up to their Google Drive. If this is set to false, no backup or restore of the application will ever be performed (this is useful if your app deals with sensitive information). Defaults to the Android default, which is `true`
 - `softwareKeyboardLayoutMode` Determines how the software keyboard will impact the layout of the application. This maps to the `android:windowSoftInputMode` property. Defaults to `resize`. Valid values: `resize`, `pan`
 - `runtimeVersion` The runtime version associated with this manifest for the Android platform. If provided, this will override the top level runtimeVersion key.
+- `googleServicesFile` - Location of the `GoogleService-Info.plist` file for configuring Firebase. Including this key automatically enables FCM in the app.
+- `config` - config for e.g. Google Maps API, Mobile Ads API etc
 
-The CLI would look for any changes in the `app.json` file and regenerate the temporary folders if changes are applied.
+##### Expo-specific
+- `publishManifestPath` - manifest for the iOS version written to this path during publish
+- `publishBundlePath` - bundle for the iOS version written to this path during publish
+- `userInterfaceStyle` - forces app to always use the light/dark/automatic mode. Requires `expo-system-ui` to be installed
+- `playStoreUrl` - URL to your app on the Google Play Store, used to link Expo project with store page
+- `jsEngine` - Specifies the JavaScript engine for iOS apps. Supported only on EAS Build
+
+The CLI would look for any changes in the `app.json` file and regenerate the platform-specific folders when running one of the React Native commands.
 
 Additionally, it would become possible to create custom plugins within the app. Since the plugins would be available to import directly from `react-native`, it would not need any additional setup on the developer side. E.g. developer can easily create a custom plugin:
 
