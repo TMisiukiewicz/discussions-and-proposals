@@ -55,6 +55,7 @@ The main motivation between this proposal is to create a standarized way of gene
 ## Detailed design
 
 ![Screenshot 2023-04-05 at 11 01 31](https://user-images.githubusercontent.com/13985840/230034001-4e40b04a-f474-47a9-98f7-15fdfa1bf7e8.png)
+Proposal of the new workflow
 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core as a separate package in monorepo. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'd handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
