@@ -2,7 +2,8 @@
 title: Support Expo Config Plugins in React Native apps
 author:
 - Tomasz Misiukiewicz
-date: today
+- Michał Pierzchała
+date: 06-04-2023
 ---
 
 # RFC0000: Support Expo Config Plugins in React Native apps
