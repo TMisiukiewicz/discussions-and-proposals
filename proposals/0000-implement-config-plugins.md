@@ -54,8 +54,8 @@ The main motivation between this proposal is to create a standarized way of gene
 
 ## Detailed design
 
+### Proposal of the new workflow
 ![Screenshot 2023-04-05 at 11 01 31](https://user-images.githubusercontent.com/13985840/230034001-4e40b04a-f474-47a9-98f7-15fdfa1bf7e8.png)
-Proposal of the new workflow
 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core as a separate package in monorepo. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'd handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
@@ -246,14 +246,15 @@ These changes would possibly also affect libraries development and allow maintai
 
 If config plugins become a standard, we could provide support for it in [create-react-native-library](https://github.com/callstack/react-native-builder-bob).
 
+## Potential benefits
+
 ### Improved updates
 With this solution it seems like upgrading React Native would become much easier. Each time React Native gets upgraded, we can just copy-paste fresh iOS and Android templates from RN core and apply all the changes using config plugins. We could track if any manual changes were made in the native folders, and if yes, warn user about it and allow to upgrade only in an old way.
 
 ### Support for other platforms
 This approach would also make it possible to extend config plugins with other platforms, e.g. `react-native-windows`. Following the same pattern, a support for `windows` and `macos` properties could be added to `app.json` together with some custom mods for native files.
 
-### `reactNativeManifest` RFC
-This implementation might be also related to [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files). At this moment design is covering usage of `app.json` file, but additionally it might fit into linked RFC as well.
+> This implementation might be also related to [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files). At this moment design is covering usage of `app.json` file, but additionally it might fit into linked RFC as well.
 
 ## Drawbacks
 
