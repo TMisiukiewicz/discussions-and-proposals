@@ -48,9 +48,9 @@ This PoC shows how `prebuild` command affects the native code. Find `app.json` f
 ## Motivation
 According to the [Expo docs](https://docs.expo.dev/guides/config-plugins/), config plugins are a system for extending Expo config and customizing the prebuild phase of managed builds. Expo CLI is using it internally to generate and configure all the native code for managed projects.
 
-Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set of configuration options for React Native app, providing a standarized way of generating and configuring native code on all platforms.
+Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set of configuration options for React Native app, providing a standarized way of generating and configuring native code for any platform.
 
-The main motivation between this proposal is to create a standarized way of generating and configuring native side of React Native projects across all platforms, including Out-of-Tree platforms. Currently using config plugins is available only to projects based on Expo. It is very powerful, but it's limited only to Android and iOS, currently with no vision to support more platforms. With moving parts of it into the core of React Native, we would unlock a possibility of creating config plugins for Out-of-Tree platforms, like Windows and MacOS, in a standarized way. Additionally, we would make the process of upgrading apps to the newest React Native version much simplier than it works now. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g while running `react-native upgrade` - without having Expo in the project. 
+The main motivation between this proposal is to create a standarized way of generating and configuring native side of React Native projects for any platform, including Out-of-Tree platforms. Currently using config plugins is available only to projects based on Expo. It is very powerful, but it's limited only to Android and iOS, currently with no vision to support more platforms. With moving parts of it into the core of React Native, we would unlock a possibility of creating config plugins for Out-of-Tree platforms, like Windows and MacOS, in a standarized way. Additionally, we would make the process of upgrading apps to the newest React Native version much simplier than it works now. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g while running `react-native upgrade` - without having Expo in the project. 
 
 ## Detailed design
 
@@ -66,7 +66,9 @@ Upstreaming it will unlock a few new paths that React Native could follow. First
 - `build-android`
 - `upgrade`
 
-This would require having `@react-native/config-plugins` as a dependency of CLI. If it's possible in the future, we could move platform-specific code from CLI into the core to avoid that. It might be related to the [Move iOS and Android Specific Code to Their Own Packages](https://github.com/react-native-community/discussions-and-proposals/pull/49/files) RFC.
+This would require having `@react-native/config-plugins` as a dependency of CLI.
+
+> If it's possible in the future, we could move platform-specific code from CLI into the core to avoid that. It might be related to the [Move iOS and Android Specific Code to Their Own Packages](https://github.com/react-native-community/discussions-and-proposals/pull/49/files) RFC.
 
 All of the commands would use newly created method that would apply all the changes defined in `app.json` file. Expo is using this file to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). It will also become an opportunity to create configurations for Out-of-Tree Platforms. 
 
