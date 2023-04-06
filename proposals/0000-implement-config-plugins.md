@@ -9,7 +9,7 @@ date: today
 
 ## Summary
 
-Implementing Expo Config Plugins into React Native CLI to support modifying application's config without having to manually edit the native files.
+Upstream part of Expo Config Plugins into React Native core to support modifying application's config without having to manually edit the native files.
 
 ## Basic example
 
