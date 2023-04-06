@@ -33,6 +33,17 @@ module.exports = function (config, { apiKey }) {
     return config;
   };
 ```
+
+### Code samples
+
+[Example implementation of `prebuild` command into React Native CLI, based on Expo Config Plugins](https://github.com/react-native-community/cli/compare/main...TMisiukiewicz:cli:prebuild)
+
+This is a quick PoC on how we could possibly adapt config plugins into CLI. Prebuild command is very similar to the one from Expo CLI, it just doesn't contain Expo-related things
+
+[Possible implementation in React Native app, and how it affects native files](https://github.com/TMisiukiewicz/MyTestApp/compare/main...test-appjson)
+
+This PoC shows how `prebuild` command affects the native code. Find `app.json` file first, see how config for both platforms is defined here, and then go through all the changes in the native files to check what changes were made after using `prebuild`
+
 ## Motivation
 According to the [Expo docs](https://docs.expo.dev/guides/config-plugins/), config plugins are a system for extending Expo config and customizing the prebuild phase of managed builds. Expo CLI is using it internally to generate and configure all the native code for managed projects.
 
