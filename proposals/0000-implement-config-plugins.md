@@ -249,6 +249,9 @@ With this solution it seems like upgrading React Native would become much easier
 ### Support for other platforms
 This approach would also make it possible to extend config plugins with other platforms, e.g. `react-native-windows`. Following the same pattern, a support for `windows` and `macos` properties could be added to `app.json` together with some custom mods for native files.
 
+### `reactNativeManifest` RFC
+This implementation might be also related to [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files). At this moment design is covering usage of `app.json` file, but additionally it might fit into linked RFC as well.
+
 ## Drawbacks
 
 - some of the mods are operating on regexes, which makes them dangerous to use
@@ -261,7 +264,15 @@ This approach would also make it possible to extend config plugins with other pl
 
 ## Adoption strategy
 
-In a close cooperation with Expo, we should start with upstreaming config plugins into RN core in a way that would help them easily adjust their tools. Once it's done, changes should be applied into `react-native-cli` to support config plugins. Once both React Native and CLI are released, libraries maintainers will get the possibility of adding support for config plugins into their libraries. Additionally [`callstack/react-native-builder-bob`](https://github.com/callstack/react-native-builder-bob) should allow to create libraries with the new API.
+In a close cooperation with Expo, we should start with upstreaming config plugins into RN core in a way that would help them easily adjust their tools.
+
+Once it's done, changes should be applied into `react-native-cli` to support config plugins.
+
+Both React Native and CLI should be covered with proper documentation:
+- `reactnative.dev` with detailed description what config plugins are and how to use them
+- CLI's `README.md` file with detailed explanation of `prebuild` command and available flags
+
+Once both React Native and CLI are released and the documentation is available, community and maintainers should be informed about new API available and how it would benefit them. At the same time, [`callstack/react-native-builder-bob`](https://github.com/callstack/react-native-builder-bob) should be adjusted to support the new API.
 
 ## How we teach this
 
