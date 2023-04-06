@@ -270,7 +270,7 @@ In a close cooperation with Expo, we should start with upstreaming config plugin
 Once it's done, changes should be applied into `react-native-cli` to support config plugins.
 
 Both React Native and CLI should be covered with proper documentation:
-- `reactnative.dev` with detailed description what config plugins are and how to use them - both for developers and library maintainers
+- `reactnative.dev` with detailed description what config plugins are and how to use them - for both developers and library maintainers
 - CLI's `README.md` file with detailed explanation of `prebuild` command and available flags
 
 Once both React Native and CLI are released and the documentation is available, community and maintainers should be informed about new API available and how it would benefit them. At the same time, [`callstack/react-native-builder-bob`](https://github.com/callstack/react-native-builder-bob) should be adjusted to support the new API.
