@@ -251,7 +251,7 @@ This approach would also make it possible to extend config plugins with other pl
 ## Drawbacks
 
 - some of the mods are operating on regexes, which makes them dangerous to use
-- might take some time for library maintainers to adjust them to new approach
+- might take some time for maintainers to adjust libraries to new approach
 
 ## Alternatives
 
@@ -260,11 +260,14 @@ This approach would also make it possible to extend config plugins with other pl
 
 ## Adoption strategy
 
-In a close cooperation with Expo, we should start with upstreaming config plugins into RN core in a way that would help them easily adjust their tools. Once it's done, changes should be applied into `react-native-cli` to support config plugins. Once both React Native and CLI are released, libraries maintainers will get the possibility of adding support for config plugins into their libraries. Additionally [`callstack/react-native-builder-bob`](https://github.com/callstack/react-native-builder-bob) would have to start supporting it to create libraries with new API.
+In a close cooperation with Expo, we should start with upstreaming config plugins into RN core in a way that would help them easily adjust their tools. Once it's done, changes should be applied into `react-native-cli` to support config plugins. Once both React Native and CLI are released, libraries maintainers will get the possibility of adding support for config plugins into their libraries. Additionally [`callstack/react-native-builder-bob`](https://github.com/callstack/react-native-builder-bob) should allow to create libraries with the new API.
 
 ## How we teach this
 
-React Native docs should be updated, describing well the new approach, Expo documentation would be very helpful here. Post on React Native blog with explanation and some examples how it works and what benefits developers get from that. Conferences talks, e.g. on React Native EU, to reach as large audience as possible.
+- React Native docs should be updated, describing well the new approach, Expo documentation would be very helpful here
+- Post on React Native blog with explanation and some examples how it works and how it benefits developers and community in general
+- Conferences talks, e.g. on React Native EU, to reach as large audience as possible.
+
 From entry level developers perspective, using `app.json` file to handle configuration should be very easy. Creating custom plugins and using mods is a bit more difficult, but in general should be done by developers only when needed. Possibly the biggest audience here are library maintainers, with good understanding of the concept they will be able to adopt it into the libraries. Developers creating apps probably wouldn't have to worry about config plugins unless they need to create one.
 
 ## Unresolved questions
