@@ -243,7 +243,7 @@ These changes would possibly also affect libraries development and allow maintai
 }
 ```
 
-If config plugins become a standard, we could provide support for it in [@callstack/react-native-builder-bob](https://github.com/callstack/react-native-builder-bob).
+If config plugins become a standard, we could provide support for it in [create-react-native-library](https://github.com/callstack/react-native-builder-bob).
 
 ### Improved updates
 With this solution it seems like upgrading React Native would become much easier. Each time React Native gets upgraded, we can just copy-paste fresh iOS and Android templates from RN core and apply all the changes using config plugins. We could track if any manual changes were made in the native folders, and if yes, warn user about it and allow to upgrade only in an old way.
@@ -275,7 +275,7 @@ Both React Native and CLI should be covered with proper documentation:
 - `reactnative.dev` with detailed description what config plugins are and how to use them - for both developers and library maintainers
 - CLI's `README.md` file with detailed explanation of `prebuild` command and available flags
 
-Once both React Native and CLI are released and the documentation is available, community and maintainers should be informed about new API available and how it would benefit them. At the same time, [`callstack/react-native-builder-bob`](https://github.com/callstack/react-native-builder-bob) should be adjusted to support the new API.
+Once both React Native and CLI are released and the documentation is available, community and maintainers should be informed about new API available and how it would benefit them. At the same time, [`create-react-native-library`](https://github.com/callstack/react-native-builder-bob) should be adjusted to support the new API.
 
 ## How we teach this
 
@@ -287,7 +287,6 @@ From entry level developers perspective, using `app.json` file to handle configu
 
 ## Unresolved questions
 - Would it be possible for library maintainers to [create a native module using config plugins](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/) without Expo Modules in the project?
-- Is there a possibility to support Expo modules e.g. `expo-camera` in the future?
 - What terminology should we use to distinguish approach with native folders kept out of repository and after prebuilding?
 - How should we determine what to keep in `app.json` and `react-native.config.js`? Does [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files) affect this proposal?
 - Could we utilize some work already done on [microsoft/react-native-test-app](https://github.com/microsoft/react-native-test-app)?
