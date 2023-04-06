@@ -240,6 +240,7 @@ This approach would also make it possible to extend config plugins with other pl
 ## Drawbacks
 
 - some of the mods are operating on regexes, which makes them dangerous to use
+- might take some time for library maintainers to adjust them to new approach
 
 ## Alternatives
 
@@ -259,3 +260,4 @@ From entry level developers perspective, using `app.json` file to handle configu
 - Would it be possible for library maintainers to [create a native module using config plugins](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/) without Expo Modules in the project?
 - Would libraries currently supporting Expo work out of the box with the new approach?
 - Is there a possibility to support Expo modules e.g. `expo-camera` in the future?
+- What terminology should we use to distinguish both approaches?
