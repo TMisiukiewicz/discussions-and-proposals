@@ -261,6 +261,7 @@ This implementation might be also related to [RFC: introduce reactNativeMetadata
 
 - moving native folders to temporary directory instead of having it in the project root - it would cause a lot of issues regarding native folders paths
 - creating separate package with native folders to modify it directly in node_modules - same as above, additionally it could generate some yarn/npm-specific issues
+- [`microsoft/react-native-test-app`](https://github.com/microsoft/react-native-test-app) - it already has config plugins implemented, but in our opinion config plugins need broader adoption
 
 ## Adoption strategy
 
