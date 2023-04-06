@@ -275,3 +275,4 @@ From entry level developers perspective, using `app.json` file to handle configu
 - Would libraries currently supporting Expo work out of the box with the new approach?
 - Is there a possibility to support Expo modules e.g. `expo-camera` in the future?
 - What terminology should we use to distinguish both approaches?
+- How should we determine what to keep in `app.json` and `react-native.config.js`? Does [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files) affect this proposal?
