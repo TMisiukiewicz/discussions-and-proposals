@@ -74,7 +74,7 @@ All of the commands would use newly created method that would apply all the chan
 
 Here's the list of Expo Config properties, divided by those that React Native could possibly handle out of the box, and the Expo-specific ones: 
 
-#### General
+#### Platform-independent
 ##### Possible to adopt by RN
 - `name` - The name of the app.
 - `platforms` - Platforms that project supports.
