@@ -66,7 +66,7 @@ Upstreaming it will unlock a few new paths that React Native could follow. First
 - `build-android`
 - `upgrade`
 
-This would require having `@react-native/config-plugins` as a dependency of `react-native-cli`. If it's possible in the future, we could move platform-specific code from CLI into the core to avoid that. It might be related to the [Move iOS and Android Specific Code to Their Own Packages](https://github.com/react-native-community/discussions-and-proposals/pull/49/files) RFC.
+This would require having `@react-native/config-plugins` as a dependency of CLI. If it's possible in the future, we could move platform-specific code from CLI into the core to avoid that. It might be related to the [Move iOS and Android Specific Code to Their Own Packages](https://github.com/react-native-community/discussions-and-proposals/pull/49/files) RFC.
 
 All of the commands would use newly created method that would apply all the changes defined in `app.json` file. Expo is using this file to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). It will also become an opportunity to create configurations for Out-of-Tree Platforms. 
 
