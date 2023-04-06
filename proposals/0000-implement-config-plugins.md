@@ -287,8 +287,7 @@ From entry level developers perspective, using `app.json` file to handle configu
 
 ## Unresolved questions
 - Would it be possible for library maintainers to [create a native module using config plugins](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/) without Expo Modules in the project?
-- Would libraries currently supporting Expo work out of the box with the new approach?
 - Is there a possibility to support Expo modules e.g. `expo-camera` in the future?
-- What terminology should we use to distinguish both approaches?
+- What terminology should we use to distinguish approach with native folders kept out of repository and after prebuilding?
 - How should we determine what to keep in `app.json` and `react-native.config.js`? Does [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files) affect this proposal?
 - Could we utilize some work already done on [microsoft/react-native-test-app](https://github.com/microsoft/react-native-test-app)?
