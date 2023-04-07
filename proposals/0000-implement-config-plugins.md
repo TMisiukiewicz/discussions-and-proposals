@@ -62,6 +62,9 @@ The main motivation between this proposal is to create a standarized way of gene
 
 ### Proposal of the new workflow
 ![Screenshot 2023-04-05 at 11 01 31](https://user-images.githubusercontent.com/13985840/230034001-4e40b04a-f474-47a9-98f7-15fdfa1bf7e8.png)
+This diagram shows how the new workflow would work after doing all the required changes. "Config plugins" would become a part of React Native core, which then can be consumed by CLI, Expo, libraries and others.
+
+> This implementation might be also related to [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files). At this moment design is covering usage of `app.json` file, but additionally it might fit into linked RFC as well.
 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core as a separate package in monorepo. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'd handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
@@ -260,11 +263,9 @@ With this solution it seems like upgrading React Native would become much easier
 ### Support for other platforms
 This approach would also make it possible to extend config plugins with other platforms, e.g. `react-native-windows`. Following the same pattern, a support for `windows` and `macos` properties could be added to `app.json` together with some custom mods for native files.
 
-> This implementation might be also related to [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files). At this moment design is covering usage of `app.json` file, but additionally it might fit into linked RFC as well.
-
 ## Drawbacks
 
-- some of the mods are operating on regexes, which makes them dangerous to use
+- some of the mods are operating on regexes, which makes them dangerous to use - especially when core developers are modifying template. We suggest having some markers to allow modifying templates only between them. List of files modified based on regex: `MainActivity.java`, `MainApplication.java`, `build.gradle`, `settings.gradle`, `AppDelegate.m`
 - might take some time for maintainers to adjust libraries to new approach
 
 ## Alternatives
