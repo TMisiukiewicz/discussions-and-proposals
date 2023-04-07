@@ -45,6 +45,12 @@ This is a quick PoC on how we could possibly adapt config plugins into CLI. Preb
 
 This PoC shows how `prebuild` command affects the native code. Find `app.json` file first, see how config for both platforms is defined here, and then go through all the changes in the native files to check what changes were made after using `prebuild`
 
+[Create custom plugin for `react-native-image-picker` library](https://github.com/react-native-image-picker/react-native-image-picker/compare/main...TMisiukiewicz:react-native-image-picker:create-plugin)
+
+[Usage of created custom plugin in the example app](https://github.com/TMisiukiewicz/MyTestApp/compare/expo-custom-mod...add-rn-lib)
+
+To proof that it would benefit libraries maintainers and community, I created a simple plugin for `react-native-image-picker` library, which allows to set the description messages for required permissions through `app.json`. Plugin is applied in `plugins` array and it's overwriting `Info.plist` values.
+
 ## Motivation
 According to the [Expo docs](https://docs.expo.dev/guides/config-plugins/), config plugins are a system for extending Expo config and customizing the prebuild phase of managed builds. Expo CLI is using it internally to generate and configure all the native code for managed projects.
 
