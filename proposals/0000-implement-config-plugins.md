@@ -276,15 +276,13 @@ This approach would also make it possible to extend config plugins with other pl
 
 ## Adoption strategy
 
-In a close cooperation with Expo, we should start with upstreaming config plugins into RN core in a way that would help them easily adjust their tools.
-
-Once it's done, changes should be applied into `react-native-cli` to support config plugins.
-
-Both React Native and CLI should be covered with proper documentation:
+- [ ] In close cooperation with Expo, upstreaming config plugins into RN core in a way that would help them easily adjust their tools.
+- [ ] changes should be applied into `react-native-cli` to support config plugins.
+- [ ] Both React Native and CLI should be covered with proper documentation:
 - `reactnative.dev` with detailed description what config plugins are and how to use them - for both developers and library maintainers
 - CLI's `README.md` file with detailed explanation of `prebuild` command and available flags
-
-Once both React Native and CLI are released and the documentation is available, community and maintainers should be informed about new API available and how it would benefit them. At the same time, [`create-react-native-library`](https://github.com/callstack/react-native-builder-bob) should be adjusted to support the new API.
+- [ ] community and maintainers should be informed about new API available and how it would benefit them
+- [ ]  at the same time, [`create-react-native-library`](https://github.com/callstack/react-native-builder-bob) should be adjusted to support the new API.
 
 ## How we teach this
 
