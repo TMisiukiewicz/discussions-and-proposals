@@ -193,7 +193,7 @@ module.exports = function (config) {
 {
   "name": "MyTestApp",
   "displayName": "MyTestApp",
-+  "plugins": ["./plugins/withNewString.js"]
++ "plugins": ["./plugins/withNewString.js"]
 }
 ```
 In the example above, custom plugin is using `withStringsXml` mod. Mods are async functions that modify native files. A list of the mods available for custom plugins:
@@ -233,14 +233,14 @@ These changes would possibly also affect libraries development and allow maintai
 {
     "name": "MyTestApp",
     "displayName": "MyTestApp",
-+    "plugins": [
-+          [
-+            "expo-camera",
-+            {
-+              "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
-+            }
-+          ]
-+        ]
++   "plugins": [
++      [
++        "expo-camera",
++         {
++           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
++         }
++      ]
++   ]
 }
 ```
 
