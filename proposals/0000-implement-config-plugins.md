@@ -294,7 +294,6 @@ Once both React Native and CLI are released and the documentation is available, 
 From entry level developers perspective, using `app.json` file to handle configuration should be very easy. Creating custom plugins and using mods is a bit more difficult, but in general should be done by developers only when needed. Possibly the biggest audience here are library maintainers, with good understanding of the concept they will be able to adopt it into the libraries. Developers creating apps probably wouldn't have to worry about config plugins unless they need to create one.
 
 ## Unresolved questions
-- Would it be possible for library maintainers to [create a native module using config plugins](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/) without Expo Modules in the project?
 - What terminology should we use to distinguish approach with native folders kept out of repository and after prebuilding?
 - How should we determine what to keep in `app.json` and `react-native.config.js`? Does [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files) affect this proposal?
 - Could we utilize some work already done on [microsoft/react-native-test-app](https://github.com/microsoft/react-native-test-app)?
