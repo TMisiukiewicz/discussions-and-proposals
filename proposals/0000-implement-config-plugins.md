@@ -260,6 +260,8 @@ If config plugins become a standard, we could provide support for it in [create-
 ### Improved updates
 With this solution it seems like upgrading React Native would become much easier. Each time React Native gets upgraded, we can just copy-paste fresh iOS and Android templates from RN core and apply all the changes using config plugins. We could track if any manual changes were made in the native folders, and if yes, warn user about it and allow to upgrade only in an old way.
 
+> For updating dependencies we could utilize [@rnx-kit/align-deps](https://microsoft.github.io/rnx-kit/docs/tools/align-deps)
+
 ### Support for other platforms
 This approach would also make it possible to extend config plugins with other platforms, e.g. `react-native-windows`. Following the same pattern, a support for `windows` and `macos` properties could be added to `app.json` together with some custom mods for native files.
 
