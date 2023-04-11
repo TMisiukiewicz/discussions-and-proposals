@@ -265,14 +265,17 @@ This approach would also make it possible to extend config plugins with other pl
 
 ## Drawbacks
 
-- some of the mods are operating on regexes, which makes them dangerous to use - especially when core developers are modifying template. We suggest having some markers to allow modifying templates only between them. List of files modified based on regex: `MainActivity.java`, `MainApplication.java`, `build.gradle`, `settings.gradle`, `AppDelegate.m`
+- some of the mods are operating on regexes, which makes them dangerous to use - especially when core developers are modifying template. Config plugins cannot cover every usage scenario safely. We suggest having some markers to allow modifying templates only between them. List of files modified based on regex: `MainActivity.java`, `MainApplication.java`, `build.gradle`, `settings.gradle`, `AppDelegate.m`
 - might take some time for maintainers to adjust libraries to new approach
+- bringing config plugins into core might generate scenarios where dependencies are making incompatible changes, so it might get hard to debug
 
 ## Alternatives
 
 - moving native folders to temporary directory instead of having it in the project root - it would cause a lot of issues regarding native folders paths
 - creating separate package with native folders to modify it directly in node_modules - same as above, additionally it could generate some yarn/npm-specific issues
 - [`microsoft/react-native-test-app`](https://github.com/microsoft/react-native-test-app) - it already has config plugins implemented, but in our opinion config plugins need broader adoption
+
+> RNTA does not have platform specific files checked in, they are provided by RNTA package or generated at a build time. However some of the files are in the repository, e.g. `Podfile` or `build.gradle`, but they have some configs applied directly from RNTA package.  
 
 ## Adoption strategy
 
