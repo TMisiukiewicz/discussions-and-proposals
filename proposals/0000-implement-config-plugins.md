@@ -3,7 +3,7 @@ title: Support Expo Config Plugins in React Native apps
 author:
 - Tomasz Misiukiewicz
 - Michał Pierzchała
-date: 06-04-2023
+date: 20-04-2023
 ---
 
 # RFC0000: Support Expo Config Plugins in React Native apps
@@ -54,13 +54,13 @@ To prove that it would benefit libraries maintainers and community, I created a 
 ## Motivation
 According to the [Expo docs](https://docs.expo.dev/guides/config-plugins/), config plugins are a system for extending Expo config and customizing the prebuild phase of managed builds. Expo CLI is using it internally to generate and configure all the native code for managed projects.
 
-Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set of configuration options for React Native app, providing a standardized way of generating and configuring native code for any platform.
+Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a **set of configuration options for React Native app, providing a standardized way of generating and configuring native code for any platform**.
 
-The main benefit would be to make the process of upgrading apps to the latest React Native version much simplier than it is now. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g. while running `react-native upgrade`.
+The main benefit would be to **make the process of upgrading apps to the latest React Native version much simplier than it is now**. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g. while running `react-native upgrade`.
 
-Currently using config plugins is available only to projects based on Expo. As showcased in the code samples above, it’s possible to just use @expo/config-plugins today, however it poses a risk of incompatibilities for built-in plugins that rely on specific Expo setup that may not be there in every RN app.
+Currently using config plugins is available only to projects based on Expo. As showcased in the code samples above, it’s possible to just use `@expo/config-plugins` today, however it poses a risk of incompatibilities for built-in plugins that rely on specific Expo setup that may not be there in every RN app.
 
-Another motivation to move it into core is to tie up Config Plugins to the React Native app template. Currently, these two components are separate, and despite our efforts to establish their compatibility through conceptual work, further modifications to the template could potentially result in disruptions. By upstreaming it into the core, we can create a seamless connection between Config Plugins and the RN template, mitigating the risk of potential breakages caused by future changes.
+Another motivation to move it into core is to tie up Config Plugins to the React Native app template. Currently, these two components are separate, and despite our efforts to establish their compatibility through conceptual work, further modifications to the template could potentially result in disruptions. **By upstreaming it into the core, we can create a seamless connection between Config Plugins and the RN template, mitigating the risk of potential breakages caused by future changes**.
 
 We believe Expo provides superior DX for most of the app teams out there. Due to historical reasons, there are myths around what Expo can and can’t do, that are vastly invalid. We hope this proposal, bridging Expo ideas into RN CLI apps, will help bust those myths, push more users to Expo as a result and improve the experience of those that for any reasons don’t won’t to do so.
 
@@ -74,7 +74,7 @@ This diagram shows how the new workflow would work after doing all the required 
 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core as a separate package in monorepo. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'd handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
-Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. It would become possible to add platform-specific folders like `android` and `ios` to `.gitignore` by default and keep them out of the repository unless it's needed (e.g. when it's not possible to do some native-side changes with using config plugins). These folders would be automatically (re)generated when running one of the following commands:
+Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, **it can change the way of generating native code**. It would become possible to add platform-specific folders like `android` and `ios` to `.gitignore` by default and keep them out of the repository unless it's needed (e.g. when it's not possible to do some native-side changes with using config plugins). These folders would be automatically (re)generated when running one of the following commands:
 - `run-ios`
 - `run-android`
 - `build-ios`
@@ -85,7 +85,7 @@ This would require having `@react-native/config-plugins` as a dependency of CLI.
 
 > If it's possible in the future, we could move platform-specific code from CLI into the core to avoid that. It might be related to the [Move iOS and Android Specific Code to Their Own Packages](https://github.com/react-native-community/discussions-and-proposals/pull/49/files) RFC.
 
-All of the commands would use newly created method that would apply all the changes defined in `app.json` file. Expo is using this file to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). It will also become an opportunity to create configurations for Out-of-Tree Platforms. 
+All of the commands would use newly created method that would apply all the changes defined in `app.json` file. Expo is using this file to determine how to load the app config in Expo Go and Expo Prebuild. With config plugins implemented, this file could work the same way as in Expo, but, by default, it would not support Expo-related properties (Expo will still be able to easily extend this config to match their needs). You can get more info about configuration with app.json in Expo [here](https://docs.expo.dev/workflow/configuration). **It will also become an opportunity to create configurations for Out-of-Tree Platforms.**
 
 Here's the list of Expo Config properties, divided by those that React Native could possibly handle out of the box, and the Expo-specific ones: 
 
@@ -178,7 +178,7 @@ Here's the list of Expo Config properties, divided by those that React Native co
 
 The CLI would look for any changes in the `app.json` file and regenerate the platform-specific folders when running one of the React Native commands.
 
-Additionally, it would become possible to create custom plugins within the app. Since the plugins would be available to import directly from the core, it would not need any additional setup on the developer side. E.g. developer can easily create a custom plugin:
+Additionally, **it would become possible to create custom plugins within the app. Since the plugins would be available to import directly from the core, it would not need any additional setup on the developer side**. E.g. developer can easily create a custom plugin:
 
 `./plugins/withStringsXml.js`:
 ```js
@@ -238,11 +238,11 @@ It would also be possible to use all of the helpers currently available in `@exp
 The mods can be also are appended to the mods object of the configuration. This section varies from the other parts of the configuration as it is not serialized after the initial reading. It's possible to utilize it to execute operations while generating code. In general, creating custom plugins with mod functions are simpler to work with, so it's recommended to use it instead of using `mods` object in `app.json`.
 
 ### `prebuild` command
-Additionally, React Native CLI would have a couple of new commands, similar to `prebuild` known from Expo CLI. The method applying config plugins into native code would run with the commands mentioned above, but, `prebuild` command would additionally add the native files into repository to make sure developers can safely make any manual changes in native folders. If there is a need of prebuilding only one of the platforms, it would be possible to use `prebuild-android` and `prebuild-ios` commands. Prebuild would run all config plugins to apply all of the necessary changes. There should also be a possibility of using `--clean` flag with prebuild to install fresh copy of native directories and apply all config plugins. It should be used only if there are no manual changes made to native files.
+**Additionally, React Native CLI would have a couple of new commands, similar to `prebuild` known from Expo CLI**. The method applying config plugins into native code would run with the commands mentioned above, but, `prebuild` command would additionally add the native files into repository to make sure developers can safely make any manual changes in native folders. If there is a need of prebuilding only one of the platforms, it would be possible to use `prebuild-android` and `prebuild-ios` commands. Prebuild would run all config plugins to apply all of the necessary changes. There should also be a possibility of using `--clean` flag with prebuild to install fresh copy of native directories and apply all config plugins. It should be used only if there are no manual changes made to native files.
 
 ### Library development
 
-These changes would possibly also affect libraries development and allow maintainers to use this API within libraries. Based on the [Expo tutorial](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/), we could add support for `app.plugin.js` file for libraries and then declare them under `"plugins"` property in `app.json` the same way Expo is doing that with their libraries:
+These changes would possibly also affect libraries development and allow maintainers to use this API within libraries. Based on the [Expo tutorial](https://docs.expo.dev/modules/config-plugin-and-native-module-tutorial/), **we could add support for `app.plugin.js` file for libraries and then declare them under `"plugins"` property in `app.json` the same way Expo is doing that with their libraries**:
 ```diff
 {
     "name": "MyTestApp",
