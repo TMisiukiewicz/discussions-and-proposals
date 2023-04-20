@@ -253,6 +253,8 @@ These changes would possibly also affect libraries development and allow maintai
 }
 ```
 
+You can find an example built for `react-native-image-picker` library in [Code samples](https://github.com/TMisiukiewicz/discussions-and-proposals/blob/rfc-config-plugins/proposals/0000-implement-config-plugins.md#code-samples) section.
+
 If config plugins become a standard, we could provide support for it in [create-react-native-library](https://github.com/callstack/react-native-builder-bob).
 
 ## Potential benefits
