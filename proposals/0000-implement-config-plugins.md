@@ -16,7 +16,7 @@ Upstream part of Expo Config Plugins into React Native core to support modifying
 
 https://user-images.githubusercontent.com/13985840/229797752-81009e28-3153-4702-b52f-14602789a87b.mov
 
-In this example, when running `start` command, Android permissions defined in `app.json` are added to `AndroidManifest.xml` file, and a new key is added into `Info.plist` file based on a custom plugin:
+In this example, Android permissions defined in `app.json` are added to `AndroidManifest.xml` file, and a new key is added into `Info.plist` file based on a custom plugin:
 
 ```js
 module.exports = function (config, { apiKey }) {
@@ -56,12 +56,16 @@ According to the [Expo docs](https://docs.expo.dev/guides/config-plugins/), conf
 
 Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set of configuration options for React Native app, providing a standarized way of generating and configuring native code for any platform.
 
-The main motivation between this proposal is to create a standarized way of generating and configuring native side of React Native projects for any platform, including Out-of-Tree platforms. Currently using config plugins is available only to projects based on Expo. It is very powerful, but it's limited only to Android and iOS, currently with no vision to support more platforms. With moving parts of it into the core of React Native, we would unlock a possibility of creating config plugins for Out-of-Tree platforms, like Windows and MacOS, in a standarized way. Additionally, we would make the process of upgrading apps to the newest React Native version much simplier than it works now. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g while running `react-native upgrade` - without having Expo in the project. 
+The main motivation between this proposal is to create a standarized way of generating and configuring native side of React Native projects for any platform, including Out-of-Tree platforms. Currently using config plugins is available only to projects based on Expo. It is very powerful, but it's limited only to Android and iOS, currently with no vision to support more platforms. With moving parts of it into the core of React Native, we would unlock a possibility of creating config plugins for Out-of-Tree platforms, like Windows and MacOS, in a standarized way. 
+
+Additionally, we would make the process of upgrading apps to the newest React Native version much simplier than it works now. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g while running `react-native upgrade` - without having Expo in the project. Despite the great work Expo is doing, we have to keep in mind that there are still many projects using RN CLI, some of which may be stuck on older RN versions. Hence, we aim to help them in unleashing the full potential of React Native by streamlining the upgrade process, ensuring that these projects can benefit from the latest features and improvements.
+
+Additional motivation to move it into core is making Config Plugins tied up with the React Native app template. Currently, these two components are separate, and despite our efforts to establish their compatibility through conceptual work, further modifications to the template could potentially result in disruptions. By upstreaming it into the core, we can create a seamless connection between Config Plugins and the RN template, mitigating the risk of potential breakages caused by future changes.
 
 ## Detailed design
 
 ### Proposal of the new workflow
-![Screenshot 2023-04-05 at 11 01 31](https://user-images.githubusercontent.com/13985840/230034001-4e40b04a-f474-47a9-98f7-15fdfa1bf7e8.png)
+![image](https://user-images.githubusercontent.com/13985840/233337419-3439dd5d-ce7e-4298-a021-4bf49f184be3.png)
 This diagram shows how the new workflow would work after doing all the required changes. "Config plugins" would become a part of React Native core, which then can be consumed by CLI, Expo, libraries and others.
 
 > This implementation might be also related to [RFC: introduce reactNativeMetadata to package.json](https://github.com/react-native-community/discussions-and-proposals/pull/588/files). At this moment design is covering usage of `app.json` file, but additionally it might fit into linked RFC as well.
@@ -69,7 +73,6 @@ This diagram shows how the new workflow would work after doing all the required 
 The very first step would be upstreaming non-Expo related code of `@expo/config-plugins` and `@expo/config-types` into React Native core as a separate package in monorepo. It contains all logic and helpers needed to modify native side of RN project easily from JS side. We'd handle discussions with Expo to coordinate what parts of config plugins can be safely upstreamed into core. It has to be done in a way where Expo would still able to extend it on their side with all the stuff related to Expo, like EAS Builds etc.
 
 Upstreaming it will unlock a few new paths that React Native could follow. First of all, and probably most important, it can change the way of generating native code. It would become possible to add platform-specific folders like `android` and `ios` to `.gitignore` by default and keep them out of the repository unless it's needed (e.g. when it's not possible to do some native-side changes with using config plugins). These folders would be automatically (re)generated when running one of the following commands:
-- `start`
 - `run-ios`
 - `run-android`
 - `build-ios`
