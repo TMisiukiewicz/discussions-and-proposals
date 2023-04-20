@@ -58,11 +58,11 @@ Based on that, for the purpose of this RFC, I'd define "Config Plugins" as a set
 
 The main benefit would be to make the process of upgrading apps to the latest React Native version much simplier than it is now. Very often it requires some additional manual steps on the native side, resolving conflicts etc. With Expo Config Plugins implemented into React Native, it would be possible to store all the native-related config on the JS side and apply it into native files whenever it's needed, e.g. while running `react-native upgrade`.
 
-Currently using config plugins is available only to projects based on Expo. It is very powerful, but it's limited only to Android and iOS, currently with no vision to support more platforms. By moving parts of it into the core of React Native, we would unlock a possibility of creating config plugins for Out-of-Tree platforms, like Windows and MacOS, in a standardized way.
+Currently using config plugins is available only to projects based on Expo. As showcased in the code samples above, it’s possible to just use @expo/config-plugins today, however it poses a risk of incompatibilities for built-in plugins that rely on specific Expo setup that may not be there in every RN app.
 
 Another motivation to move it into core is to tie up Config Plugins to the React Native app template. Currently, these two components are separate, and despite our efforts to establish their compatibility through conceptual work, further modifications to the template could potentially result in disruptions. By upstreaming it into the core, we can create a seamless connection between Config Plugins and the RN template, mitigating the risk of potential breakages caused by future changes.
 
-We believe Expo provides superior DX for most of the app teams out there. Due to historical reasons, there are myths around what Expo can and can’t do, that are vastly invalid. We hope this proposal, bridging Expo ideas into RN CLI apps, will help bust those myths and push more users to Expo as a result.
+We believe Expo provides superior DX for most of the app teams out there. Due to historical reasons, there are myths around what Expo can and can’t do, that are vastly invalid. We hope this proposal, bridging Expo ideas into RN CLI apps, will help bust those myths, push more users to Expo as a result and improve the experience of those that for any reasons don’t won’t to do so.
 
 ## Detailed design
 
